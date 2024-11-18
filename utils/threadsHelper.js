@@ -1,6 +1,28 @@
 import fs from 'fs/promises'
 import path from 'path'
 
+// utils/threadsHelper.js
+import { subDays, format } from 'date-fns';
+
+export async function fetchThreadsData(accessToken) {
+  const oneWeekAgo = subDays(new Date(), 7);
+  const formattedDate = format(oneWeekAgo, 'yyyy-MM-dd');
+
+  const url = `https://graph.threads.net/v1.0/me/threads?since=${formattedDate}`;
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch threads data');
+  }
+
+  const data = await response.json();
+  return data.data; // Return the posts data
+}
+
 async function getAccessToken(code) {
     const response = await fetch('https://graph.threads.net/oauth/access_token', {
       method: 'POST',
@@ -23,42 +45,37 @@ async function getAccessToken(code) {
     const data = await response.json()
     return data.access_token
   }
-
-export async function generateHTML(data) {
-  const htmlContent = `
-    <!DOCTYPE html>
-    <html>
+// utils/threadsHelper.js
+export async function generateHTML(posts) {
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html lang="ko">
       <head>
-        <title>Threads Data</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Threads 데이터 요약</title>
         <style>
-          /* CSS 스타일 정의 */
           body { font-family: Arial, sans-serif; }
           .post { border: 1px solid #ddd; margin: 10px; padding: 15px; }
-          /* ... 추가 스타일 ... */
         </style>
       </head>
       <body>
-        <h1>Threads Posts</h1>
-        ${data.map(post => `
+        <h1>지난 주의 Threads 게시물</h1>
+        ${posts.map(post => `
           <div class="post">
             <h3>${post.timestamp}</h3>
             <p>${post.text}</p>
-            <div class="stats">
-              <span>좋아요: ${post.likes}</span>
-              <span>답글: ${post.replies}</span>
-              <span>조회수: ${post.views}</span>
-            </div>
           </div>
         `).join('')}
       </body>
-    </html>
-  `
-
-  const fileName = `threads_data_${Date.now()}.html`
-  const filePath = path.join(process.cwd(), 'public', 'reports', fileName)
+      </html>
+    `;
   
-  await fs.mkdir(path.dirname(filePath), { recursive: true })
-  await fs.writeFile(filePath, htmlContent)
-
-  return `/reports/${fileName}`
-}
+    const fileName = `threads_data_${Date.now()}.html`;
+    const filePath = path.join(process.cwd(), 'public', 'reports', fileName);
+    
+    await fs.mkdir(path.dirname(filePath), { recursive: true });
+    await fs.writeFile(filePath, htmlContent);
+  
+    return `/reports/${fileName}`;
+  }

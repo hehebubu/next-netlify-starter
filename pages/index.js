@@ -32,7 +32,7 @@ export default function Home() {
         body: JSON.stringify({ 
           code,
           startDate: '2024-03-01',  // 원하는 시작 날짜
-          endDate: '2024-03-19'     // 원하는 종료 날짜
+          endDate: '2024-05-19'     // 원하는 종료 날짜
         }),
       })
 
@@ -65,8 +65,8 @@ export default function Home() {
             className="logo"
           />
         </Link>
-        <Header title="Welcome to TRBG!" />
-        <p> Welcome to 쓰레받기! </p>
+        <Header title="Welcome to TRBG!!" />
+        <p> Welcome to 쓰레받기!! </p>
         <ThreadsAuthButton />
         <p className="description">
           Powered by @<a href="https://www.threads.net/@hehe_bubu" className="description">hehe_bubu </a>

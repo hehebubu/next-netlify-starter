@@ -5,9 +5,7 @@ export default async function handler(req, res) {
   
     try {
       const { code } = req.body;
-      console.log('Received auth code:', code);  // 디버깅용
-  
-      // 액세스 토큰 얻기
+      // 액세스 토큰 요청 로직 추가
       const tokenResponse = await fetch('https://graph.threads.net/oauth/access_token', {
         method: 'POST',
         headers: {
@@ -33,17 +31,10 @@ export default async function handler(req, res) {
       }
   
       const tokenData = await tokenResponse.json();
-      console.log('Token received:', tokenData);  // 디버깅용
-  
-      // 토큰을 사용하여 추가 작업 수행 가능
-      // 예: 사용자 정보 가져오기, 게시물 작성 등
-  
       res.status(200).json({ 
         success: true, 
-        message: 'Authentication successful',
-        // token: tokenData.access_token  // 필요한 경우 토큰 반환
+        access_token: tokenData.access_token, // 액세스 토큰 반환
       });
-  
     } catch (error) {
       console.error('API Error:', error);
       res.status(500).json({ 

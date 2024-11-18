@@ -24,6 +24,7 @@ export default function AuthCallback() {
     }
   }, [router.query]);
 
+
   const handleAuthCode = async (code) => {
     try {
       const tokenResponse = await fetch('/api/threads/fetch', {
@@ -35,7 +36,7 @@ export default function AuthCallback() {
       });
   
       if (!tokenResponse.ok) {
-        setStatus('인증 처리 중 오류가 발생했습니다. 1');
+        setStatus('인증 처리 중 오류가 발생했습니다.1');
         return;
       }
   
@@ -56,8 +57,8 @@ export default function AuthCallback() {
         router.push('/result');
       }, 3000);
     } catch (error) {
-      console.error('인증 처리 중 오류 2 :', error);
-      setStatus('인증 처리 중 오류가 발생했습니다. 2');
+      console.error('인증 처리 중 오류2:', error);
+      setStatus('인증 처리 중 오류가 발생했습니다.3');
     }
   };
 

@@ -35,7 +35,7 @@ export default function AuthCallback() {
       });
   
       if (!tokenResponse.ok) {
-        setStatus('인증 처리 중 오류가 발생했습니다.');
+        setStatus('인증 처리 중 오류가 발생했습니다. 1');
         return;
       }
   
@@ -56,8 +56,8 @@ export default function AuthCallback() {
         router.push('/result');
       }, 3000);
     } catch (error) {
-      console.error('인증 처리 중 오류:', error);
-      setStatus('인증 처리 중 오류가 발생했습니다.');
+      console.error('인증 처리 중 오류 2 :', error);
+      setStatus('인증 처리 중 오류가 발생했습니다. 2');
     }
   };
 

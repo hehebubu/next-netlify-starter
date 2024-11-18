@@ -26,28 +26,41 @@ export default function AuthCallback() {
 
   const handleAuthCode = async (code) => {
     try {
-      const response = await fetch('/api/threads/fetch', {
+      const tokenResponse = await fetch('/api/threads/fetch', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ code }),
       });
-
-      if (response.ok) {
-        setStatus('인증 성공! 메인 페이지로 이동합니다...');
-        // 3초 후 메인 페이지로 이동
-        setTimeout(() => {
-          router.push('/');
-        }, 3000);
-      } else {
+  
+      if (!tokenResponse.ok) {
         setStatus('인증 처리 중 오류가 발생했습니다.');
+        return;
       }
+  
+      const { access_token } = await tokenResponse.json();
+  
+      // 액세스 토큰을 로컬 스토리지에 저장
+      localStorage.setItem('accessToken', access_token);
+  
+      // 최근 1주일간 게시물 가져오기
+      const posts = await fetchThreadsData(access_token);
+      
+      // HTML 파일 생성
+      const htmlFilePath = await generateHTML(posts);
+      setStatus(`HTML 파일이 생성되었습니다: <a href="${htmlFilePath}" target="_blank">${htmlFilePath}</a>`);
+      
+      // 3초 후 메인 페이지로 이동
+      setTimeout(() => {
+        router.push('/result');
+      }, 3000);
     } catch (error) {
       console.error('인증 처리 중 오류:', error);
       setStatus('인증 처리 중 오류가 발생했습니다.');
     }
   };
+
 
   return (
     <div className={styles.container}>

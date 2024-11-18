@@ -91,6 +91,23 @@ export default function AuthCallback() {
     }
   };
 
+  const generateHtmlReport = async (posts) => {
+        const response = await fetch('/api/generateHtml', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ posts }), // Send posts data to the API
+        });
+
+        if (response.ok) {
+            const { fileUrl } = await response.json();
+            console.log('HTML report generated at:', fileUrl);
+        } else {
+            console.error('Failed to generate HTML report');
+        }
+    };
+
   return (
     <div>
       <h1>인증 처리 중...</h1>

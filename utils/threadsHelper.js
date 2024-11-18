@@ -23,21 +23,6 @@ export async function fetchThreadsData(accessToken) {
   return data.data; // Return the posts data
 }
 
-export async function fetchThreadsData(accessToken) {
-    const response = await fetch('https://api.threads.net/v1.0/me/threads', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-  
-    if (!response.ok) {
-      throw new Error('Failed to fetch threads data'); // 오류 발생 시 예외 던지기
-    }
-  
-    const data = await response.json();
-    return data.data; // 게시물 데이터 반환
-  }
-
 async function getAccessToken(code) {
     const response = await fetch('https://graph.threads.net/oauth/access_token', {
       method: 'POST',

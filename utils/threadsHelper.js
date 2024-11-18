@@ -62,9 +62,3 @@ export async function generateHTML(data) {
 
   return `/reports/${fileName}`
 }
-
-async function getAccessToken(code) {
-  // Threads API 토큰 발급 로직 구현
-  // ...
-  return accessToken
-}

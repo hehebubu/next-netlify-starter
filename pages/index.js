@@ -31,7 +31,7 @@ export default function Home() {
         },
         body: JSON.stringify({ 
           code,
-          startDate: '2024-01-01',  // 원하는 시작 날짜
+          startDate: '2024-03-01',  // 원하는 시작 날짜
           endDate: '2024-03-19'     // 원하는 종료 날짜
         }),
       })

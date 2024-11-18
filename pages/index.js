@@ -6,7 +6,7 @@ import ThreadsAuthButton from '@components/ThreadsAuthButton'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { useEffect } from 'react'
+
 import { useRouter } from 'next/router'
 
 // pages/result.js

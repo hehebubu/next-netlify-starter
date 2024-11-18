@@ -29,9 +29,7 @@ export default function Home() {
         
         <ThreadsAuthButton />
         <p className="description">
-          <a href="https://your-url-here.com" className="description">
-            Powered by @hehe_bubu
-          </a>
+          Powered by @<a href="https://www.threads.net/@hehe_bubu" className="description">hehe_bubu </a>
         </p>
       </main>
 

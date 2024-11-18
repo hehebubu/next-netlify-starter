@@ -34,3 +34,12 @@ code {
   justify-content: center;
   align-items: center;
 }
+
+.logo {
+  margin: 20px 0;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}

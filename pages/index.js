@@ -3,6 +3,9 @@ import Header from '@components/Header'
 import Footer from '@components/Footer'
 import ThreadsAuthButton from '@components/ThreadsAuthButton'
 
+import Image from 'next/image'
+import Link from 'next/link'
+
 export default function Home() {
   return (
     <div className="container">
@@ -12,10 +15,23 @@ export default function Home() {
       </Head>
 
       <main>
+        <Link href="/">
+          <Image
+            src="/main_logo.png"
+            alt="TRBG Logo"
+            width={200}
+            height={100}
+            priority
+            className="logo"
+          />
+        </Link>
         <Header title="Welcome to TRBG!" />
+        
         <ThreadsAuthButton />
         <p className="description">
-          Get started by editing <code>pages/index.js</code>
+          <a href="https://your-url-here.com" className="description">
+            Powered by @hehe_bubu
+          </a>
         </p>
       </main>
 

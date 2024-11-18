@@ -66,7 +66,7 @@ export default function Home() {
           />
         </Link>
         <Header title="Welcome to TRBG!" />
-        
+        <p> Welcome to 쓰레받기! </p>
         <ThreadsAuthButton />
         <p className="description">
           Powered by @<a href="https://www.threads.net/@hehe_bubu" className="description">hehe_bubu </a>

@@ -22,29 +22,48 @@ export async function fetchThreadsData(accessToken) {
   const data = await response.json();
   return data.data; // Return the posts data
 }
-
-async function getAccessToken(code) {
-    const response = await fetch('https://graph.threads.net/oauth/access_token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        client_id: process.env.NEXT_PUBLIC_THREADS_CLIENT_ID,
-        client_secret: process.env.THREADS_CLIENT_SECRET,
-        grant_type: 'authorization_code',
-        redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI,
+// 액세스 토큰을 가져오는 함수
+async function getAccessToken(code, clientId, clientSecret, redirectUri) {
+    const url = "https://graph.threads.net/oauth/access_token";
+    const data = {
+        client_id: clientId,
+        client_secret: clientSecret,
+        grant_type: "authorization_code",
+        redirect_uri: redirectUri,
         code: code
-      })
-    })
-  
-    if (!response.ok) {
-      throw new Error('Failed to get access token')
+    };
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+        const jsonResponse = await response.json();
+        return jsonResponse.access_token; // 1차 액세스 토큰 반환
+    } else {
+        throw new Error("Failed to get access token");
     }
-  
-    const data = await response.json()
-    return data.access_token
-  }
+}
+
+// 장기 액세스 토큰을 가져오는 함수
+async function getLongLivedToken(shortToken, clientSecret) {
+    const url = `https://graph.threads.net/access_token?grant_type=th_exchange_token&client_secret=${clientSecret}&access_token=${shortToken}`;
+    
+    const response = await fetch(url, {
+        method: 'GET',
+    });
+
+    if (response.ok) {
+        const jsonResponse = await response.json();
+        return jsonResponse.access_token; // 장기 액세스 토큰 반환
+    } else {
+        throw new Error("Failed to get long-lived token");
+    }
+}
 // utils/threadsHelper.js
 export async function generateHTML(posts) {
     const htmlContent = `

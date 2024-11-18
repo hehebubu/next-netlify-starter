@@ -1,3 +1,5 @@
+import styles from './ThreadsAuthButton.module.css'
+
 export default function ThreadsAuthButton() {
     const handleThreadsAuth = () => {
       const AUTH_URL = 'https://threads.net/oauth/authorize'
@@ -13,8 +15,8 @@ export default function ThreadsAuthButton() {
     }
   
     return (
-      <button onClick={handleThreadsAuth}>
-        Threads ID로 인증하기
-      </button>
+        <button className={styles.button} onClick={handleThreadsAuth}>  
+            Threads ID로 인증하기
+        </button>
     )
   }

@@ -1,12 +1,28 @@
 import fs from 'fs/promises'
 import path from 'path'
 
-export async function fetchThreadsData(code, startDate, endDate) {
-  const accessToken = await getAccessToken(code)
-  // Threads API 호출 로직 구현
-  // ...
-  return threadsData
-}
+async function getAccessToken(code) {
+    const response = await fetch('https://graph.threads.net/oauth/access_token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        client_id: process.env.NEXT_PUBLIC_THREADS_CLIENT_ID,
+        client_secret: process.env.THREADS_CLIENT_SECRET,
+        grant_type: 'authorization_code',
+        redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI,
+        code: code
+      })
+    })
+  
+    if (!response.ok) {
+      throw new Error('Failed to get access token')
+    }
+  
+    const data = await response.json()
+    return data.access_token
+  }
 
 export async function generateHTML(data) {
   const htmlContent = `

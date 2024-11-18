@@ -1,69 +1,62 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import styles from '@styles/AuthCallback.module.css'
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-      return res.status(405).json({ message: 'Method not allowed' })
-    }
+
+
+export default function AuthCallback() {
+    const router = useRouter()
+    const [status, setStatus] = useState('인증 처리 중...')
   
-    try {
-      const { code } = req.body
-      console.log('Received auth code:', code)  // 디버깅용
+    useEffect(() => {
+      const { code, error, error_message } = router.query
   
-      // 액세스 토큰 얻기
-      const tokenResponse = await fetch('https://graph.threads.net/oauth/access_token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          client_id: process.env.NEXT_PUBLIC_THREADS_CLIENT_ID,
-          client_secret: process.env.THREADS_CLIENT_SECRET,
-          grant_type: 'authorization_code',
-          redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI,
-          code: code
-        })
-      })
-  
-      if (!tokenResponse.ok) {
-        const errorData = await tokenResponse.json()
-        console.error('Token error:', errorData)
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Failed to get access token',
-          error: errorData 
-        })
+      if (error) {
+        setStatus(`인증 오류: ${error_message || error}`)
+        console.error('인증 오류:', error, error_message)
+        return
       }
   
-      const tokenData = await tokenResponse.json()
-      console.log('Token received:', tokenData)  // 디버깅용
+      if (code) {
+        setStatus('인증 코드 확인 완료')
+        console.log('인증 코드:', code)
+        
+        // API 호출하여 코드 처리
+        handleAuthCode(code)
+      }
+    }, [router.query])
   
-      // 토큰을 사용하여 추가 작업 수행 가능
-      // 예: 사용자 정보 가져오기, 게시물 작성 등
+    const handleAuthCode = async (code) => {
+      try {
+        const response = await fetch('/api/threads/fetch', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ code }),
+        })
   
-      res.status(200).json({ 
-        success: true, 
-        message: 'Authentication successful',
-        // token: tokenData.access_token  // 필요한 경우 토큰 반환
-      })
-  
-    } catch (error) {
-      console.error('API Error:', error)
-      res.status(500).json({ 
-        success: false, 
-        message: 'Internal server error',
-        error: error.message 
-      })
+        if (response.ok) {
+          setStatus('인증 성공! 메인 페이지로 이동합니다...')
+          // 3초 후 메인 페이지로 이동
+          setTimeout(() => {
+            router.push('/')
+          }, 3000)
+        } else {
+          setStatus('인증 처리 중 오류가 발생했습니다.')
+        }
+      } catch (error) {
+        console.error('인증 처리 중 오류:', error)
+        setStatus('인증 처리 중 오류가 발생했습니다.')
+      }
     }
-  }
-
-  return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h1>Threads 인증</h1>
-        <div className={styles.status}>{status}</div>
-        <div className={styles.loader}></div>
+  
+    return (
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <h1>Threads 인증</h1>
+          <div className={styles.status}>{status}</div>
+          <div className={styles.loader}></div>
+        </div>
       </div>
-    </div>
-  )
+    )
 }

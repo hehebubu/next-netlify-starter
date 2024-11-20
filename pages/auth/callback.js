@@ -43,7 +43,7 @@ export default function AuthCallback() {
         router.push('/result');
       }, 3000);
     } catch (error) {
-      console.error('인증 처리 중 오류:', error);
+      console.error('인증 처리 중 오류 :', error);
       setStatus('인증 처리 중 오류가 발생했습니다.');
     }
   };
